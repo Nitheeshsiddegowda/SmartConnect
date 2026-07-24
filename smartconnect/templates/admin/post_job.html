@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Post a Job — SmartConnect{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">Job Portal</span>
+    <h1>Post a Job</h1>
+  </div>
+  <a href="{{ url_for('admin.jobs') }}" class="btn ghost">← Back to postings</a>
+</div>
+
+<div class="card" style="max-width:640px;">
+  <form method="POST">
+    <div class="field-row">
+      <div class="field">
+        <label>Job Title</label>
+        <input type="text" name="title" required>
+      </div>
+      <div class="field">
+        <label>Company</label>
+        <input type="text" name="company" required>
+      </div>
+    </div>
+    <div class="field">
+      <label>Description</label>
+      <textarea name="description" rows="4" required></textarea>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Location</label>
+        <input type="text" name="location" value="Bengaluru">
+      </div>
+      <div class="field">
+        <label>Package (LPA / stipend)</label>
+        <input type="text" name="package_lpa" placeholder="e.g. 8-12 LPA">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Minimum CGPA</label>
+        <input type="number" step="0.1" min="0" max="10" name="min_cgpa" value="6.0">
+      </div>
+      <div class="field">
+        <label>Max Backlogs Allowed</label>
+        <input type="number" min="0" name="max_backlogs" value="0">
+      </div>
+      <div class="field">
+        <label>Eligible Batch</label>
+        <input type="text" name="eligible_batch" placeholder="e.g. 2026">
+      </div>
+    </div>
+    <div class="field">
+      <label>Eligible Branches</label>
+      <div class="btn-row" style="margin-bottom:6px;">
+        {% for b in branches %}
+        <label style="display:inline-flex; align-items:center; gap:5px; font-weight:400; border:1px solid var(--grid); padding:6px 10px; border-radius:8px;">
+          <input type="checkbox" name="branches" value="{{ b.code }}" style="width:auto;"> {{ b.code }}
+        </label>
+        {% endfor %}
+      </div>
+      <span class="muted" style="font-size:12px;">Leave all unchecked to open the role to every branch.</span>
+    </div>
+    <div class="field">
+      <label>Application Deadline</label>
+      <input type="date" name="last_date" required>
+    </div>
+    <button type="submit" class="btn amber" style="width:100%; justify-content:center;">Publish Job</button>
+  </form>
+</div>
+{% endblock %}

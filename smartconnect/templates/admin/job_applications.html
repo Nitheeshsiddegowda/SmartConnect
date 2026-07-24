@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Applicants — {{ job.title }}{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">Job Portal</span>
+    <h1>Applicants — {{ job.title }}</h1>
+  </div>
+  <a href="{{ url_for('admin.jobs') }}" class="btn ghost">← Back to postings</a>
+</div>
+
+<div class="card">
+  <table>
+    <thead><tr><th>Name</th><th>USN</th><th>Branch</th><th>CGPA</th><th>Phone</th><th>Resume</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for a in apps %}
+      <tr>
+        <td>{{ a.full_name }}</td>
+        <td class="mono">{{ a.usn }}</td>
+        <td class="mono">{{ a.branch_code }}</td>
+        <td class="mono">{{ a.cgpa }}</td>
+        <td class="mono">{{ a.phone }}</td>
+        <td><a href="{{ a.resume_link }}" target="_blank" rel="noopener">View</a></td>
+        <td>
+          <form method="POST" style="display:flex; gap:6px; align-items:center;">
+            <input type="hidden" name="app_id" value="{{ a.id }}">
+            <select name="status" onchange="this.form.submit()">
+              {% for opt in ['Applied','Shortlisted','Rejected','Selected'] %}
+                <option value="{{ opt }}" {{ 'selected' if a.status == opt }}>{{ opt }}</option>
+              {% endfor %}
+            </select>
+          </form>
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="7" class="empty-state">No applications yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

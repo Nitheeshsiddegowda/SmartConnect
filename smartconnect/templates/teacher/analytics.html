@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Class Analytics — SmartConnect{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">Performance Analyzer</span>
+    <h1>Class Analytics</h1>
+  </div>
+</div>
+
+<div class="card" style="max-width:520px;">
+  <h3>Select a class</h3>
+  <form method="GET">
+    <div class="field">
+      <select name="ts_id" onchange="this.form.submit()">
+        <option value="" {{ 'selected' if not selected }} disabled>Choose a class...</option>
+        {% for a in assignments %}
+          <option value="{{ a.ts_id }}" {{ 'selected' if selected and selected.id == a.ts_id }}>
+            {{ a.name }} — Sem {{ a.semester }} Sec {{ a.section }} ({{ a.code }})
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+  </form>
+</div>
+
+{% if selected %}
+<div class="grid grid-2">
+  <div class="card">
+    <h3>Attendance Distribution</h3>
+    <div class="chart-frame"><img src="{{ url_for('charts.teacher_class_attendance_chart', ts_id=selected.id) }}" alt="Class attendance"></div>
+  </div>
+  <div class="card">
+    <h3>Marks Distribution (External / SEE)</h3>
+    <div class="chart-frame"><img src="{{ url_for('charts.teacher_class_marks_chart', ts_id=selected.id) }}" alt="Class marks"></div>
+  </div>
+</div>
+{% else %}
+<div class="card"><p class="empty-state">Select a class above to view its analytics.</p></div>
+{% endif %}
+{% endblock %}

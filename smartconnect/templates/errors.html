@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SmartConnect — {{ code }}</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="login-wrap">
+  <div class="card" style="max-width:420px; text-align:center;">
+    <h1 style="font-size:44px;">{{ code }}</h1>
+    <p class="muted">{{ message }}</p>
+    <a href="{{ url_for('auth.index') }}" class="btn amber">Back to SmartConnect</a>
+  </div>
+</div>
+</body>
+</html>

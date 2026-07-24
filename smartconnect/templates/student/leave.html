@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Leave Application — SmartConnect{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">Attendance Module</span>
+    <h1>Leave Application</h1>
+  </div>
+</div>
+
+<div class="grid grid-2" style="grid-template-columns: 380px 1fr;">
+  <div class="card">
+    <h3>Apply for Leave</h3>
+    <form method="POST">
+      <div class="field">
+        <label>Subject (leave blank for general/full-day leave)</label>
+        <select name="subject_id">
+          <option value="">General leave — all classes</option>
+          {% for s in subjects %}
+            <option value="{{ s.id }}">{{ s.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>From date</label>
+          <input type="date" name="from_date" max="{{ today }}" required>
+        </div>
+        <div class="field">
+          <label>To date</label>
+          <input type="date" name="to_date" max="{{ today }}" required>
+        </div>
+      </div>
+      <div class="field">
+        <label>Reason</label>
+        <textarea name="reason" rows="4" placeholder="e.g. Medical leave, family function, college event..." required></textarea>
+      </div>
+      <button type="submit" class="btn amber" style="width:100%; justify-content:center;">Submit Application</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Application History</h3>
+    {% if history %}
+    <table>
+      <thead><tr><th>Subject</th><th>Dates</th><th>Reason</th><th>Status</th></tr></thead>
+      <tbody>
+      {% for h in history %}
+        <tr>
+          <td>{{ h.subject_name or 'General' }}</td>
+          <td class="mono">{{ h.from_date }} → {{ h.to_date }}</td>
+          <td style="max-width:220px;">{{ h.reason }}</td>
+          <td><span class="badge {{ 'ok' if h.status=='Approved' else ('danger' if h.status=='Rejected' else 'warning') }}">{{ h.status }}</span></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="empty-state">No leave applications submitted yet.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

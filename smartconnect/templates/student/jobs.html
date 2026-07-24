@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Job Portal — SmartConnect{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">Job Portal</span>
+    <h1>Open Opportunities</h1>
+  </div>
+  <a href="{{ url_for('student.my_applications') }}" class="btn ghost">Track My Applications →</a>
+</div>
+
+<div class="grid grid-2">
+{% for item in job_list %}
+  {% set j = item.job %}
+  <div class="card">
+    <div class="card-title-row">
+      <div>
+        <h3 style="margin-bottom:2px;">{{ j.title }}</h3>
+        <span class="muted" style="font-size:13px;">{{ j.company }} · {{ j.location }}</span>
+      </div>
+      {% if item.applied %}
+        <span class="badge navy">Applied</span>
+      {% elif item.eligible %}
+        <span class="badge ok">Eligible</span>
+      {% else %}
+        <span class="badge danger">Not Eligible</span>
+      {% endif %}
+    </div>
+    <p style="font-size:13.5px; color:var(--ink);">{{ j.description }}</p>
+    <div class="btn-row" style="margin-bottom:12px;">
+      <span class="badge neutral">Package: {{ j.package_lpa or 'Not disclosed' }}</span>
+      <span class="badge neutral">Min CGPA: {{ j.min_cgpa }}</span>
+      <span class="badge neutral">Branches: {{ j.allowed_branches }}</span>
+      <span class="badge warning">Apply by {{ j.last_date }}</span>
+    </div>
+    {% if item.applied %}
+      <button class="btn ghost small" disabled>Already applied</button>
+    {% elif item.eligible %}
+      <a href="{{ url_for('student.apply_job', job_id=j.id) }}" class="btn amber small">Apply now</a>
+    {% else %}
+      <span class="muted" style="font-size:12.5px;">
+        {% if not item.eligible_cgpa %}Your CGPA doesn't meet the minimum requirement. {% endif %}
+        {% if not item.eligible_branch %}This role isn't open to your branch. {% endif %}
+      </span>
+    {% endif %}
+  </div>
+{% else %}
+  <p class="empty-state">No open job postings right now. Check back soon.</p>
+{% endfor %}
+</div>
+{% endblock %}

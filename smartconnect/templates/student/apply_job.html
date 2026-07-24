@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Apply — {{ job.title }}{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">Job Portal</span>
+    <h1>Apply — {{ job.title }}</h1>
+  </div>
+  <a href="{{ url_for('student.jobs') }}" class="btn ghost">← Back to listings</a>
+</div>
+
+<div class="grid grid-2" style="grid-template-columns: 1fr 380px;">
+  <div class="card">
+    <h3>{{ job.company }}</h3>
+    <p style="font-size:13.5px;">{{ job.description }}</p>
+    <div class="btn-row">
+      <span class="badge neutral">Location: {{ job.location }}</span>
+      <span class="badge neutral">Package: {{ job.package_lpa or 'Not disclosed' }}</span>
+      <span class="badge warning">Apply by {{ job.last_date }}</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Application Form</h3>
+    {% if already %}
+      <p class="badge navy">You've already applied to this role.</p>
+    {% else %}
+    <form method="POST">
+      <div class="field">
+        <label>Phone number</label>
+        <input type="tel" name="phone" placeholder="e.g. 9876543210" required>
+      </div>
+      <div class="field">
+        <label>Resume link</label>
+        <input type="url" name="resume_link" placeholder="Google Drive / LinkedIn link to your resume" required>
+      </div>
+      <div class="field">
+        <label>Cover note (optional)</label>
+        <textarea name="cover_note" rows="4" placeholder="Why are you a good fit?"></textarea>
+      </div>
+      <button type="submit" class="btn amber" style="width:100%; justify-content:center;">Submit Application</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Mark Attendance — {{ assignment.subject_name }}{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">{{ assignment.subject_name }} · Sec {{ assignment.section }} · {{ class_date }}</span>
+    <h1>Attendance Sheet</h1>
+  </div>
+  <a href="{{ url_for('teacher.attendance_select') }}" class="btn ghost">← Change class</a>
+</div>
+
+<div class="card">
+  <form method="POST">
+    <input type="hidden" name="ts_id" value="{{ assignment.id }}">
+    <input type="hidden" name="class_date" value="{{ class_date }}">
+    <div class="btn-row" style="margin-bottom:14px;">
+      <button type="button" class="btn ghost small" onclick="setAll('Present')">Mark all present</button>
+      <button type="button" class="btn ghost small" onclick="setAll('Absent')">Mark all absent</button>
+    </div>
+    <table>
+      <thead><tr><th>USN</th><th>Name</th><th>Status</th></tr></thead>
+      <tbody>
+      {% for s in roster %}
+        <tr>
+          <td class="mono">{{ s.usn }}</td>
+          <td>{{ s.full_name }}</td>
+          <td>
+            <label style="display:inline-flex; align-items:center; gap:4px; font-weight:400;">
+              <input type="radio" name="status_{{ s.id }}" value="Present" style="width:auto;"
+                {{ 'checked' if existing.get(s.id, 'Present') == 'Present' }}> Present
+            </label>
+            &nbsp;&nbsp;
+            <label style="display:inline-flex; align-items:center; gap:4px; font-weight:400;">
+              <input type="radio" name="status_{{ s.id }}" value="Absent" style="width:auto;"
+                {{ 'checked' if existing.get(s.id) == 'Absent' }}> Absent
+            </label>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="3" class="empty-state">No students found for this section.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <div style="margin-top:16px;">
+      <button type="submit" class="btn amber">Save Attendance</button>
+    </div>
+  </form>
+</div>
+
+<script>
+function setAll(status) {
+  document.querySelectorAll('input[type=radio][value="' + status + '"]').forEach(el => el.checked = true);
+}
+</script>
+{% endblock %}

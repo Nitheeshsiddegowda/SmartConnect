@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Enter Marks — SmartConnect{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">Performance Analyzer</span>
+    <h1>Enter Marks</h1>
+  </div>
+</div>
+
+<div class="card" style="max-width:520px;">
+  <h3>Select class &amp; assessment</h3>
+  <form method="GET" action="{{ url_for('teacher.enter_marks') }}">
+    <div class="field">
+      <label>Subject &amp; Section</label>
+      <select name="ts_id" required>
+        <option value="" disabled selected>Choose a class...</option>
+        {% for a in assignments %}
+          <option value="{{ a.ts_id }}">{{ a.name }} — Sem {{ a.semester }} Sec {{ a.section }} ({{ a.code }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label>Assessment</label>
+      <select name="type" required>
+        <option value="internal1">Internal Test 1 (out of 50)</option>
+        <option value="internal2">Internal Test 2 (out of 50)</option>
+        <option value="internal3">Internal Test 3 (out of 50)</option>
+        <option value="external">External / SEE (out of 100)</option>
+      </select>
+    </div>
+    <button type="submit" class="btn amber" style="width:100%; justify-content:center;">Open Marks Sheet</button>
+  </form>
+</div>
+{% endblock %}

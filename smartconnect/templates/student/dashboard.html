@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — SmartConnect{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">Student Dashboard</span>
+    <h1>Welcome, {{ current_name.split(' ')[0] }}</h1>
+  </div>
+  <div class="who">Semester {{ student.semester }} · Section {{ student.section }}<br>
+    <strong>{{ student.branch_code }}</strong> · {{ student.usn }}</div>
+</div>
+
+<div class="grid grid-2" style="grid-template-columns: 320px 1fr; align-items:start;">
+  <div class="id-card">
+    <div class="id-eyebrow">Campus ID</div>
+    <div class="id-name">{{ current_name }}</div>
+    <div class="id-role">{{ student.branch_name }}</div>
+    <div class="id-row"><span class="k">USN</span><span class="v">{{ student.usn }}</span></div>
+    <div class="id-row"><span class="k">Semester</span><span class="v">{{ student.semester }} — Sec {{ student.section }}</span></div>
+    <div class="id-row"><span class="k">Batch</span><span class="v">{{ student.batch_year }}</span></div>
+    <div class="id-row"><span class="k">CGPA</span><span class="v">{{ student.cgpa or '—' }}</span></div>
+  </div>
+
+  <div>
+    <div class="grid grid-4" style="margin-bottom:0;">
+      <div class="stat-card">
+        <div class="label">Overall Attendance</div>
+        <div class="value">{{ overall_pct }}%</div>
+      </div>
+      <div class="stat-card alt">
+        <div class="label">Current CGPA</div>
+        <div class="value">{{ student.cgpa or '—' }}</div>
+      </div>
+      <div class="stat-card alt">
+        <div class="label">Pending Leaves</div>
+        <div class="value">{{ pending_leaves }}</div>
+      </div>
+      <div class="stat-card alt">
+        <div class="label">Job Applications</div>
+        <div class="value">{{ my_apps }}</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:18px;">
+      <div class="card-title-row">
+        <h3 style="margin:0;">AI Placement Readiness</h3>
+        <span class="badge {{ 'ok' if readiness.label=='Placement Ready' else ('warning' if readiness.label=='Needs Improvement' else 'danger') }}">{{ readiness.label }}</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" style="width:{{ readiness.probability }}%; background: {{ 'var(--green)' if readiness.probability>=70 else ('var(--amber)' if readiness.probability>=45 else 'var(--red)') }};"></div>
+      </div>
+      <p class="muted" style="margin-top:10px; font-size:13px;">
+        Score: <strong class="mono">{{ readiness.probability }}%</strong>
+        — modeled on your attendance, CGPA and backlog count using a logistic regression classifier.
+        {% if readiness.top_factor %}The biggest factor holding this back right now is <strong>{{ readiness.top_factor }}</strong>.{% endif %}
+      </p>
+    </div>
+  </div>
+</div>
+
+{% if shortage_subjects %}
+<div class="card" style="border-color: var(--red);">
+  <h3 style="color:var(--red);">⚠ Attendance Shortage Alert</h3>
+  <p class="muted" style="font-size:13.5px;">You're below the 75% eligibility line in {{ shortage_subjects|length }} subject(s). Consider applying for leave with a valid reason if you were absent for an approved cause, and attend upcoming classes.</p>
+  <div class="btn-row">
+    {% for s in shortage_subjects %}
+      <span class="badge danger">{{ s.subject.name }} — {{ s.pct }}%</span>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<div class="grid grid-2">
+  <div class="card">
+    <h3>Attendance by Subject</h3>
+    <div class="chart-frame"><img src="{{ url_for('charts.student_attendance_chart') }}" alt="Attendance chart"></div>
+  </div>
+  <div class="card">
+    <h3>Internal vs External Performance</h3>
+    <div class="chart-frame"><img src="{{ url_for('charts.student_performance_chart') }}" alt="Performance chart"></div>
+  </div>
+</div>
+{% endblock %}

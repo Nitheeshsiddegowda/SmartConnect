@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Leave Requests — SmartConnect{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">Attendance Module</span>
+    <h1>Leave Requests</h1>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Pending ({{ pending|length }})</h3>
+  {% if pending %}
+  <table>
+    <thead><tr><th>Student</th><th>Subject</th><th>Dates</th><th>Reason</th><th>Action</th></tr></thead>
+    <tbody>
+    {% for l in pending %}
+      <tr>
+        <td>{{ l.full_name }}<br><span class="mono muted" style="font-size:11px;">{{ l.usn }}</span></td>
+        <td>{{ l.subject_name or 'General' }}</td>
+        <td class="mono">{{ l.from_date }} → {{ l.to_date }}</td>
+        <td style="max-width:240px;">{{ l.reason }}</td>
+        <td>
+          <form method="POST" style="display:inline;">
+            <input type="hidden" name="leave_id" value="{{ l.id }}">
+            <button type="submit" name="decision" value="Approved" class="btn small amber">Approve</button>
+            <button type="submit" name="decision" value="Rejected" class="btn small danger">Reject</button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty-state">No pending leave requests. You're all caught up.</p>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h3>Recently Reviewed</h3>
+  {% if history %}
+  <table>
+    <thead><tr><th>Student</th><th>Subject</th><th>Dates</th><th>Decision</th></tr></thead>
+    <tbody>
+    {% for l in history %}
+      <tr>
+        <td>{{ l.full_name }}</td>
+        <td>{{ l.subject_name or 'General' }}</td>
+        <td class="mono">{{ l.from_date }} → {{ l.to_date }}</td>
+        <td><span class="badge {{ 'ok' if l.status=='Approved' else 'danger' }}">{{ l.status }}</span></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty-state">No history yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

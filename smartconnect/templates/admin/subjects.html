@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Curriculum — SmartConnect{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">College Management</span>
+    <h1>Curriculum</h1>
+  </div>
+</div>
+
+<div class="card">
+  <form method="GET" class="field" style="max-width:260px;">
+    <label>Branch</label>
+    <select name="branch" onchange="this.form.submit()">
+      {% for b in branches %}
+        <option value="{{ b.code }}" {{ 'selected' if branch == b.code }}>{{ b.code }} — {{ b.name }}</option>
+      {% endfor %}
+    </select>
+  </form>
+</div>
+
+<div class="card">
+  <table>
+    <thead><tr><th>Sem</th><th>Code</th><th>Subject</th><th>Credits</th><th>Type</th></tr></thead>
+    <tbody>
+    {% for r in rows %}
+      <tr>
+        <td class="mono">{{ r.semester }}</td>
+        <td class="mono">{{ r.code }}</td>
+        <td>{{ r.name }}</td>
+        <td class="mono">{{ r.credits }}</td>
+        <td><span class="badge {{ 'navy' if r.subject_type=='Theory' else 'neutral' }}">{{ r.subject_type }}</span></td>
+      </tr>
+    {% else %}
+      <tr><td colspan="5" class="empty-state">No subjects found.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

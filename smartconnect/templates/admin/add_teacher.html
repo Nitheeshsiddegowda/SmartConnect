@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Add Teacher — SmartConnect{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">College Management</span>
+    <h1>Add Teacher</h1>
+  </div>
+  <a href="{{ url_for('admin.teachers') }}" class="btn ghost">← Back to teachers</a>
+</div>
+
+<div class="card" style="max-width:560px;">
+  <form method="POST">
+    <div class="field">
+      <label>Full Name</label>
+      <input type="text" name="full_name" placeholder="Prof. Jane Doe" required>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Username</label>
+        <input type="text" name="username" placeholder="e.g. cse.t5" required>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" name="email">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Branch (Department)</label>
+        <select name="branch_id" required>
+          {% for b in branches %}<option value="{{ b.id }}">{{ b.code }} — {{ b.name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label>Designation</label>
+        <select name="designation">
+          <option>Assistant Professor</option>
+          <option>Associate Professor</option>
+          <option>Professor</option>
+        </select>
+      </div>
+    </div>
+    <button type="submit" class="btn amber" style="width:100%; justify-content:center;">Add Teacher</button>
+  </form>
+</div>
+{% endblock %}

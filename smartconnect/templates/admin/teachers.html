@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Teachers — SmartConnect{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">College Management</span>
+    <h1>Teachers</h1>
+  </div>
+  <a href="{{ url_for('admin.add_teacher') }}" class="btn amber">+ Add Teacher</a>
+</div>
+
+<div class="card">
+  <table>
+    <thead><tr><th>Name</th><th>Username</th><th>Branch</th><th>Designation</th><th></th></tr></thead>
+    <tbody>
+    {% for r in rows %}
+      <tr>
+        <td>{{ r.full_name }}</td>
+        <td class="mono">{{ r.username }}</td>
+        <td class="mono">{{ r.branch_code }}</td>
+        <td>{{ r.designation }}</td>
+        <td><a href="{{ url_for('admin.assign_subjects', teacher_id=r.id) }}" class="btn ghost small">Assign Subjects</a></td>
+      </tr>
+    {% else %}
+      <tr><td colspan="5" class="empty-state">No teachers yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

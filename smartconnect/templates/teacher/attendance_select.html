@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Mark Attendance — SmartConnect{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">Attendance Module</span>
+    <h1>Mark Attendance</h1>
+  </div>
+</div>
+
+<div class="card" style="max-width:520px;">
+  <h3>Select a class</h3>
+  <form method="GET" action="{{ url_for('teacher.mark_attendance') }}">
+    <div class="field">
+      <label>Subject &amp; Section</label>
+      <select name="ts_id" required>
+        <option value="" disabled selected>Choose a class...</option>
+        {% for a in assignments %}
+          <option value="{{ a.ts_id }}">{{ a.name }} — Sem {{ a.semester }} Sec {{ a.section }} ({{ a.code }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label>Class date</label>
+      <input type="date" name="class_date" value="{{ today }}" max="{{ today }}" required>
+    </div>
+    <button type="submit" class="btn amber" style="width:100%; justify-content:center;">Open Attendance Sheet</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard — SmartConnect{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">College Management</span>
+    <h1>Admin Dashboard</h1>
+  </div>
+  <div class="who">{{ current_name }}</div>
+</div>
+
+<div class="grid grid-4">
+  <div class="stat-card"><div class="label">Students</div><div class="value">{{ stats.students }}</div></div>
+  <div class="stat-card alt"><div class="label">Teachers</div><div class="value">{{ stats.teachers }}</div></div>
+  <div class="stat-card alt"><div class="label">Subjects</div><div class="value">{{ stats.subjects }}</div></div>
+  <div class="stat-card alt"><div class="label">Open Jobs</div><div class="value">{{ stats.open_jobs }}</div></div>
+</div>
+<div class="grid grid-2">
+  <div class="stat-card"><div class="label">Total Job Applications</div><div class="value">{{ stats.applications }}</div></div>
+  <div class="stat-card alt"><div class="label">Pending Leave Requests</div><div class="value">{{ stats.pending_leaves }}</div></div>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h3>Student Distribution by Branch</h3>
+    <div class="chart-frame"><img src="{{ url_for('charts.admin_branch_distribution_chart') }}" alt="Branch distribution"></div>
+  </div>
+  <div class="card">
+    <h3>College-wide Attendance</h3>
+    <div class="chart-frame"><img src="{{ url_for('charts.admin_attendance_overview_chart') }}" alt="Attendance overview"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>⚠ Students Below 75% Attendance</h3>
+  {% if low_attendance %}
+  <table>
+    <thead><tr><th>Name</th><th>USN</th><th>Branch</th><th>Semester</th><th>Attendance</th></tr></thead>
+    <tbody>
+    {% for r in low_attendance %}
+      <tr>
+        <td>{{ r.full_name }}</td>
+        <td class="mono">{{ r.usn }}</td>
+        <td class="mono">{{ r.branch_code }}</td>
+        <td class="mono">{{ r.semester }}</td>
+        <td><span class="badge danger">{{ ((r.present / r.total) * 100) | round(1) }}%</span></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty-state">No students currently below the attendance threshold.</p>
+  {% endif %}
+</div>
+{% endblock %}

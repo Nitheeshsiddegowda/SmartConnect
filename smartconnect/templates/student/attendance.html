@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Attendance — SmartConnect{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">Attendance Module</span>
+    <h1>My Attendance</h1>
+  </div>
+  <a href="{{ url_for('student.leave') }}" class="btn amber">Apply for Leave</a>
+</div>
+
+<div class="card">
+  <h3>Semester {{ student.semester }} — Visual Overview</h3>
+  <div class="chart-frame"><img src="{{ url_for('charts.student_attendance_chart') }}" alt="Attendance overview"></div>
+</div>
+
+<div class="grid grid-2">
+  {% for row in subject_attendance %}
+  <div class="card">
+    <div class="card-title-row">
+      <div>
+        <h3 style="margin-bottom:2px;">{{ row.subject.name }}</h3>
+        <span class="muted mono" style="font-size:12px;">{{ row.subject.code }}</span>
+      </div>
+      <span class="badge {{ row.level }}">{{ row.pct }}%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" style="width:{{ row.pct }}%; background: {{ 'var(--red)' if row.level=='danger' else ('var(--amber)' if row.level=='warning' else 'var(--green)') }};"></div>
+    </div>
+    <p class="muted" style="font-size:12.5px; margin:8px 0 12px 0;">{{ row.present }} present / {{ row.total }} classes held</p>
+    {% if row.recent %}
+    <table>
+      <thead><tr><th>Date</th><th>Status</th></tr></thead>
+      <tbody>
+      {% for r in row.recent %}
+        <tr><td class="mono">{{ r.class_date }}</td><td><span class="badge {{ 'ok' if r.status=='Present' else 'danger' }}">{{ r.status }}</span></td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="empty-state" style="padding:14px 0;">No classes recorded yet.</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

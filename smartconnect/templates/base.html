@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}SmartConnect{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="mark">SC</div>
+      <div>
+        <div class="name">SmartConnect</div>
+        <div class="tag">{{ current_role or '' }} portal</div>
+      </div>
+    </div>
+    <nav>
+      {% if current_role == 'student' %}
+        <a href="{{ url_for('student.dashboard') }}" class="{{ 'active' if request.endpoint=='student.dashboard' }}">Dashboard</a>
+        <a href="{{ url_for('student.attendance') }}" class="{{ 'active' if request.endpoint=='student.attendance' }}">Attendance</a>
+        <a href="{{ url_for('student.leave') }}" class="{{ 'active' if request.endpoint=='student.leave' }}">Leave Application</a>
+        <a href="{{ url_for('student.performance') }}" class="{{ 'active' if request.endpoint=='student.performance' }}">Performance</a>
+        <a href="{{ url_for('student.jobs') }}" class="{{ 'active' if request.endpoint in ['student.jobs','student.apply_job'] }}">Job Portal</a>
+        <a href="{{ url_for('student.my_applications') }}" class="{{ 'active' if request.endpoint=='student.my_applications' }}">My Applications</a>
+      {% elif current_role == 'teacher' %}
+        <a href="{{ url_for('teacher.dashboard') }}" class="{{ 'active' if request.endpoint=='teacher.dashboard' }}">Dashboard</a>
+        <a href="{{ url_for('teacher.attendance_select') }}" class="{{ 'active' if 'attendance' in request.endpoint }}">Mark Attendance</a>
+        <a href="{{ url_for('teacher.leaves') }}" class="{{ 'active' if request.endpoint=='teacher.leaves' }}">Leave Requests</a>
+        <a href="{{ url_for('teacher.marks_select') }}" class="{{ 'active' if 'marks' in request.endpoint }}">Enter Marks</a>
+        <a href="{{ url_for('teacher.analytics') }}" class="{{ 'active' if request.endpoint=='teacher.analytics' }}">Class Analytics</a>
+      {% elif current_role == 'admin' %}
+        <a href="{{ url_for('admin.dashboard') }}" class="{{ 'active' if request.endpoint=='admin.dashboard' }}">Dashboard</a>
+        <a href="{{ url_for('admin.students') }}" class="{{ 'active' if 'students' in request.endpoint }}">Students</a>
+        <a href="{{ url_for('admin.teachers') }}" class="{{ 'active' if 'teachers' in request.endpoint or request.endpoint=='admin.assign_subjects' }}">Teachers</a>
+        <a href="{{ url_for('admin.subjects') }}" class="{{ 'active' if request.endpoint=='admin.subjects' }}">Curriculum</a>
+        <a href="{{ url_for('admin.jobs') }}" class="{{ 'active' if 'job' in request.endpoint }}">Job Portal</a>
+      {% endif %}
+    </nav>
+    <div class="sidebar-footer">
+      <a href="{{ url_for('auth.logout') }}">&larr; Log out</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+</div>
+</body>
+</html>

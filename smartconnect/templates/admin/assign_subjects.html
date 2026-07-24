@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Assign Subjects — {{ teacher.full_name }}{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">College Management</span>
+    <h1>Assign Subjects — {{ teacher.full_name }}</h1>
+  </div>
+  <a href="{{ url_for('admin.teachers') }}" class="btn ghost">← Back to teachers</a>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h3>Assign a new subject</h3>
+    <form method="POST">
+      <div class="field">
+        <label>Subject</label>
+        <select name="subject_id" required>
+          {% for s in subjects %}
+            <option value="{{ s.id }}">Sem {{ s.semester }} — {{ s.name }} ({{ s.code }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label>Section</label>
+        <select name="section">
+          <option value="A">A</option><option value="B">B</option>
+        </select>
+      </div>
+      <button type="submit" class="btn amber" style="width:100%; justify-content:center;">Assign</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Currently Teaching</h3>
+    {% if current %}
+    <table>
+      <thead><tr><th>Subject</th><th>Code</th><th>Sem</th><th>Section</th></tr></thead>
+      <tbody>
+      {% for c in current %}
+        <tr><td>{{ c.name }}</td><td class="mono">{{ c.code }}</td><td class="mono">{{ c.semester }}</td><td class="mono">{{ c.section }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="empty-state">No subjects assigned yet.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

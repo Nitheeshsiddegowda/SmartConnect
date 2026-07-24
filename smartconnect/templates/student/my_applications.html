@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}My Applications — SmartConnect{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">Job Portal</span>
+    <h1>My Applications</h1>
+  </div>
+  <a href="{{ url_for('student.jobs') }}" class="btn amber">Browse jobs</a>
+</div>
+
+<div class="card">
+  {% if apps %}
+  <table>
+    <thead><tr><th>Role</th><th>Company</th><th>Package</th><th>Applied On</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for a in apps %}
+      <tr>
+        <td>{{ a.title }}</td>
+        <td>{{ a.company }}</td>
+        <td class="mono">{{ a.package_lpa or '—' }}</td>
+        <td class="mono">{{ a.applied_on[:10] }}</td>
+        <td>
+          {% if a.status == 'Selected' %}<span class="badge ok">Selected 🎉</span>
+          {% elif a.status == 'Shortlisted' %}<span class="badge warning">Shortlisted</span>
+          {% elif a.status == 'Rejected' %}<span class="badge danger">Rejected</span>
+          {% else %}<span class="badge neutral">Applied</span>{% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty-state">You haven't applied to any jobs yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

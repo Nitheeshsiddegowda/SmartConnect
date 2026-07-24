@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Add Student — SmartConnect{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">College Management</span>
+    <h1>Add Student</h1>
+  </div>
+  <a href="{{ url_for('admin.students') }}" class="btn ghost">← Back to students</a>
+</div>
+
+<div class="card" style="max-width:560px;">
+  <form method="POST">
+    <div class="field">
+      <label>Full Name</label>
+      <input type="text" name="full_name" required>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>USN</label>
+        <input type="text" name="usn" placeholder="e.g. 1SC26CSE045" required>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" name="email">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Branch</label>
+        <select name="branch_id" required>
+          {% for b in branches %}
+            <option value="{{ b.id }}">{{ b.code }} — {{ b.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label>Semester</label>
+        <select name="semester" required>
+          {% for i in range(1, 9) %}<option value="{{ i }}">Semester {{ i }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label>Section</label>
+        <select name="section">
+          <option value="A">A</option><option value="B">B</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Batch Year</label>
+      <input type="text" name="batch_year" placeholder="e.g. 2026-2030" required>
+    </div>
+    <button type="submit" class="btn amber" style="width:100%; justify-content:center;">Add Student</button>
+  </form>
+</div>
+{% endblock %}

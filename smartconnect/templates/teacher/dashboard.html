@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — SmartConnect{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">Teacher Dashboard</span>
+    <h1>Welcome, {{ current_name }}</h1>
+  </div>
+  <div class="who">{{ teacher.designation }}<br><strong>{{ teacher.branch_name }}</strong></div>
+</div>
+
+<div class="grid grid-4">
+  <div class="stat-card">
+    <div class="label">Classes Assigned</div>
+    <div class="value">{{ assignments|length }}</div>
+  </div>
+  <div class="stat-card alt">
+    <div class="label">Subjects Taught</div>
+    <div class="value">{{ subject_count }}</div>
+  </div>
+  <div class="stat-card alt">
+    <div class="label">Pending Leave Requests</div>
+    <div class="value">{{ pending_leaves }}</div>
+  </div>
+  <div class="stat-card alt">
+    <div class="label">Department Strength</div>
+    <div class="value">{{ total_students }}</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title-row">
+    <h3>My Classes</h3>
+    <div class="btn-row">
+      <a href="{{ url_for('teacher.attendance_select') }}" class="btn small amber">Mark Attendance</a>
+      <a href="{{ url_for('teacher.marks_select') }}" class="btn small ghost">Enter Marks</a>
+    </div>
+  </div>
+  <table>
+    <thead><tr><th>Subject</th><th>Code</th><th>Semester</th><th>Section</th><th>Credits</th><th></th></tr></thead>
+    <tbody>
+    {% for a in assignments %}
+      <tr>
+        <td>{{ a.name }}</td>
+        <td class="mono">{{ a.code }}</td>
+        <td class="mono">{{ a.semester }}</td>
+        <td class="mono">{{ a.section }}</td>
+        <td class="mono">{{ a.credits }}</td>
+        <td><a href="{{ url_for('teacher.analytics', ts_id=a.ts_id) }}" class="btn ghost small">Analytics</a></td>
+      </tr>
+    {% else %}
+      <tr><td colspan="6" class="empty-state">No classes assigned yet. Contact the admin office.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

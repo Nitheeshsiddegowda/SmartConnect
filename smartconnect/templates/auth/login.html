@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartConnect — Sign in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="login-wrap">
+  <div class="login-panel">
+    <div class="login-side">
+      <div>
+        <div class="mark">SC</div>
+        <h2>SmartConnect</h2>
+        <p>The single sign-in for attendance, performance and placements
+        across every branch and semester of the college.</p>
+      </div>
+      <div class="quote">
+        &gt; ATTENDANCE · PERFORMANCE · PLACEMENTS<br>
+        &gt; ONE LOGIN, YOUR WHOLE ACADEMIC RECORD
+      </div>
+    </div>
+    <div class="login-form-side">
+      <div class="role-tabs">
+        <a href="{{ url_for('auth.login', role='student') }}" class="{{ 'active' if role=='student' }}">Student</a>
+        <a href="{{ url_for('auth.login', role='teacher') }}" class="{{ 'active' if role=='teacher' }}">Teacher</a>
+        <a href="{{ url_for('auth.login', role='admin') }}" class="{{ 'active' if role=='admin' }}">Admin</a>
+      </div>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST">
+        <input type="hidden" name="role" value="{{ role }}">
+        <div class="field">
+          <label>{{ 'Username / USN' if role != 'admin' else 'Admin username' }}</label>
+          <input type="text" name="username" autocomplete="username" required autofocus>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" name="password" autocomplete="current-password" required>
+        </div>
+        <button class="btn amber" type="submit" style="width:100%; justify-content:center;">Sign in</button>
+      </form>
+
+      <div class="help-text">
+        Demo credentials —
+        {% if role == 'admin' %}
+          <code>admin</code> / <code>admin123</code>
+        {% elif role == 'teacher' %}
+          <code>cse.t1</code> / <code>teach123</code> (also ise.t1, ece.t1 …)
+        {% else %}
+          any seeded USN (lowercase), e.g. <code>1sc21cse001</code> / <code>student123</code>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

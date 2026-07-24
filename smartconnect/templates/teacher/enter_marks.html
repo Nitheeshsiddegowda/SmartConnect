@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Enter Marks — {{ assignment.subject_name }}{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">{{ assignment.subject_name }} · Sec {{ assignment.section }} · {{ label }}</span>
+    <h1>Marks Sheet</h1>
+  </div>
+  <a href="{{ url_for('teacher.marks_select') }}" class="btn ghost">← Change selection</a>
+</div>
+
+<div class="card">
+  <form method="POST">
+    <input type="hidden" name="ts_id" value="{{ assignment.id }}">
+    <input type="hidden" name="type" value="{{ mtype }}">
+    <table>
+      <thead><tr><th>USN</th><th>Name</th><th>Marks (out of {{ max_marks }})</th></tr></thead>
+      <tbody>
+      {% for s in roster %}
+        <tr>
+          <td class="mono">{{ s.usn }}</td>
+          <td>{{ s.full_name }}</td>
+          <td style="max-width:140px;">
+            <input type="number" step="0.5" min="0" max="{{ max_marks }}"
+                   name="marks_{{ s.id }}" value="{{ existing.get(s.id, '') }}">
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="3" class="empty-state">No students found for this section.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <div style="margin-top:16px;">
+      <button type="submit" class="btn amber">Save Marks</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

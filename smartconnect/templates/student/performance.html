@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Performance — SmartConnect{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div class="page-title">
+    <span class="eyebrow">Performance Analyzer</span>
+    <h1>Academic Performance</h1>
+  </div>
+</div>
+
+<div class="grid grid-3">
+  <div class="stat-card">
+    <div class="label">Current SGPA</div>
+    <div class="value">{{ current_sgpa if current_sgpa is not none else '—' }}</div>
+  </div>
+  <div class="stat-card alt">
+    <div class="label">CGPA (up to Sem {{ student.semester - 1 }})</div>
+    <div class="value">{{ cgpa if cgpa else '—' }}</div>
+  </div>
+  <div class="stat-card alt">
+    <div class="label">Subjects this semester</div>
+    <div class="value">{{ subject_rows|length }}</div>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h3>Internal vs External — Semester {{ student.semester }}</h3>
+    <div class="chart-frame"><img src="{{ url_for('charts.student_performance_chart') }}" alt="Performance chart"></div>
+  </div>
+  <div class="card">
+    <h3>SGPA Trend</h3>
+    <div class="chart-frame"><img src="{{ url_for('charts.student_sgpa_trend_chart') }}" alt="SGPA trend"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Subject-wise Result Sheet — Semester {{ student.semester }}</h3>
+  <table>
+    <thead>
+      <tr><th>Subject</th><th>Credits</th><th>Internal (CIE)</th><th>External (SEE)</th><th>Total</th><th>%</th><th>Grade</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+    {% for row in subject_rows %}
+      <tr>
+        <td>{{ row.subject.name }}<br><span class="mono muted" style="font-size:11px;">{{ row.subject.code }}</span></td>
+        <td class="mono">{{ row.subject.credits }}</td>
+        <td class="mono">{{ row.internal_avg }} / {{ row.internal_max }}</td>
+        <td class="mono">{{ row.ext_marks if row.ext_marks is not none else '—' }} / {{ row.ext_max }}</td>
+        <td class="mono">{{ row.total_obtained }} / {{ row.total_max }}</td>
+        <td class="mono">{{ row.percentage }}%</td>
+        <td><span class="badge {{ 'ok' if row.passed else 'danger' }}">{{ row.grade_letter }}</span></td>
+        <td>
+          {% if row.ext_marks is none %}
+            <span class="badge neutral">Awaited</span>
+          {% elif row.passed %}
+            <span class="badge ok">Pass</span>
+          {% else %}
+            <span class="badge danger">Fail</span>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if sem_history %}
+<div class="card">
+  <h3>Semester-wise SGPA History</h3>
+  <table>
+    <thead><tr><th>Semester</th><th>Credits</th><th>SGPA</th></tr></thead>
+    <tbody>
+    {% for s in sem_history %}
+      <tr><td>Semester {{ s.semester }}</td><td class="mono">{{ s.total_credits }}</td><td class="mono">{{ s.sgpa }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+{% endblock %}
